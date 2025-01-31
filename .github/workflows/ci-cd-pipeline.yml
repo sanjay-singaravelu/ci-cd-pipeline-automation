@@ -40,7 +40,7 @@ jobs:
     # Step 5: Build Docker image
     - name: Build Docker image
       run: |
-        docker build -t my-web-app .
+        docker build -t my-web-app -f web-app/Dockerfile .
 
     # Step 6: Push Docker image to Docker Hub (Optional, if you want to deploy it)
     - name: Push Docker image to Docker Hub
