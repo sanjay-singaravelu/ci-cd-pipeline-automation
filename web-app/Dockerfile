@@ -7,7 +7,9 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
+COPY web-app/requirements.txt .
 # Install dependencies
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose port 5000 for the web app
