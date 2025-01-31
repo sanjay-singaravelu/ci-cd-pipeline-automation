@@ -1,0 +1,53 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master  # Trigger the pipeline when you push to the 'master' branch
+  pull_request:
+    branches:
+      - master  # Trigger the pipeline on PRs targeting the 'master' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+
+    # Step 4: Run tests (optional)
+    - name: Run tests
+      run: |
+        source venv/bin/activate
+        python -m unittest discover
+
+    # Step 5: Build Docker image
+    - name: Build Docker image
+      run: |
+        docker build -t my-web-app .
+
+    # Step 6: Push Docker image to Docker Hub (Optional, if you want to deploy it)
+    - name: Push Docker image to Docker Hub
+      run: |
+        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        docker tag my-web-app $DOCKER_USERNAME/my-web-app:latest
+        docker push $DOCKER_USERNAME/my-web-app:latest
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
