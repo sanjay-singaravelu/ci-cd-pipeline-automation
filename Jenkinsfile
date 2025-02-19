@@ -13,7 +13,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // Checkout the code from GitHub or your version control system
-                git 'https://github.com/sanjay-singaravelu/ci-cd-pipeline-automation.git'
+                git credentialsId: 'github-credentials', url: 'https://github.com/sanjay-singaravelu/ci-cd-pipeline-automation'
             }
         }
 
