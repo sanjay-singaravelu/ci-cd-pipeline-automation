@@ -7,6 +7,10 @@ pipeline {
         DOCKER_REPO = 'my-app-repo'  // Repository name on Docker Hub
         KUBE_CONTEXT = 'minikube'  // Kubernetes context if using Minikube or your Kubernetes cluster context
         DOCKER_CREDENTIALS = 'DockerRegistryCreds'  // Jenkins credentials for Docker Hub login
+
+        // Ensure Docker and other utilities are found by appending paths to PATH variable
+        PATH = "/usr/local/bin:${env.PATH}"
+        PATH+EXTRA = "/usr/bin:/bin"  // Ensure common directories like sh are available
     }
 
     stages {
