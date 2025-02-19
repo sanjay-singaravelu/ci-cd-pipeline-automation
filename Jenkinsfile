@@ -1,3 +1,7 @@
+String branchName = env.BRANCH_NAME
+String gitCredentials = "github-credentials	"
+String repoUrl = "https://github.com/sanjay-singaravelu/ci-cd-pipeline-automation.git"
+
 pipeline {
     agent any
 
@@ -13,10 +17,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // Checkout the code from GitHub or your version control system
-                git credentialsId: 'github-credentials', url: 'https://github.com/sanjay-singaravelu/ci-cd-pipeline-automation.git'
-                sh "ls -lart ./*" 
-                sh "git branch -a"
-                sh "git checkout main"
+                git branch: branchName, credentialsId: 	gitCredentials, url: repoUrl
             }
         }
 
