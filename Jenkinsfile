@@ -7,9 +7,6 @@ pipeline {
         DOCKER_REPO = 'my-app-repo'  // Repository name on Docker Hub
         KUBE_CONTEXT = 'minikube'  // Kubernetes context if using Minikube or your Kubernetes cluster context
         DOCKER_CREDENTIALS = 'DockerRegistryCreds'  // Jenkins credentials for Docker Hub login
-
-        // Ensure Docker and other utilities are found by appending paths to PATH variable
-        PATH = "/usr/local/bin:${env.PATH}"  // Append /usr/local/bin to PATH
     }
 
     stages {
@@ -25,7 +22,7 @@ pipeline {
                 script {
                     // Build the Docker image
                     echo "Building Docker image..."
-                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                    sh '/bin/sh -c "docker build -t ${DOCKER_IMAGE} ."'
                 }
             }
         }
@@ -35,7 +32,7 @@ pipeline {
                 script {
                     // Run tests on the built Docker container
                     echo "Running tests on the Docker container..."
-                    sh 'docker run --rm ${DOCKER_IMAGE} npm test'  // Replace with your test command
+                    sh '/bin/sh -c "docker run --rm ${DOCKER_IMAGE} npm test"'  // Replace with your test command
                 }
             }
         }
@@ -46,12 +43,12 @@ pipeline {
                     // Login to Docker Hub using Jenkins credentials
                     echo "Logging into Docker Hub..."
                     withCredentials([usernamePassword(credentialsId: 'DockerRegistryCreds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
+                        sh '/bin/sh -c "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"'
                     }
 
                     // Push the Docker image to Docker Hub
                     echo "Pushing Docker image to Docker Hub..."
-                    sh 'docker push ${DOCKER_IMAGE}'
+                    sh '/bin/sh -c "docker push ${DOCKER_IMAGE}"'
                 }
             }
         }
@@ -65,12 +62,12 @@ pipeline {
                     if (fileExists('/usr/local/bin/minikube')) {
                         echo "Using Minikube for Kubernetes deployment"
                         // Set kubectl context to Minikube
-                        sh 'kubectl config use-context ${KUBE_CONTEXT}'
+                        sh '/bin/sh -c "kubectl config use-context ${KUBE_CONTEXT}"'
 
                         // Create Kubernetes deployment using kubectl or Helm
                         sh '''
-                        kubectl apply -f k8s/deployment.yaml
-                        kubectl apply -f k8s/service.yaml
+                        /bin/sh -c "kubectl apply -f k8s/deployment.yaml"
+                        /bin/sh -c "kubectl apply -f k8s/service.yaml"
                         '''
                     }
                 }
@@ -84,7 +81,7 @@ pipeline {
                     echo "Testing the deployed application..."
 
                     // Example: Use curl or browser to check the application
-                    sh 'curl -f http://localhost:3007 || exit 1'  // Adjust based on your app's URL
+                    sh '/bin/sh -c "curl -f http://localhost:3007 || exit 1"'  // Adjust based on your app's URL
                 }
             }
         }
