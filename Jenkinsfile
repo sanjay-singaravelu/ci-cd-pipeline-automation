@@ -9,8 +9,7 @@ pipeline {
         DOCKER_CREDENTIALS = 'DockerRegistryCreds'  // Jenkins credentials for Docker Hub login
 
         // Ensure Docker and other utilities are found by appending paths to PATH variable
-        PATH = "/usr/local/bin:${env.PATH}"
-        PATH+EXTRA = "/usr/bin:/bin"  // Ensure common directories like sh are available
+        PATH = "/usr/local/bin:${env.PATH}"  // Append /usr/local/bin to PATH
     }
 
     stages {
@@ -73,10 +72,6 @@ pipeline {
                         kubectl apply -f k8s/deployment.yaml
                         kubectl apply -f k8s/service.yaml
                         '''
-                    } else {
-                        echo "Using Docker Compose for local deployment"
-                        // Deploy with Docker Compose (if you’re using Docker Compose for local environment)
-                        sh 'docker-compose up -d'
                     }
                 }
             }
