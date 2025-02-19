@@ -14,6 +14,9 @@ pipeline {
             steps {
                 // Checkout the code from GitHub or your version control system
                 git credentialsId: 'github-credentials', url: 'https://github.com/sanjay-singaravelu/ci-cd-pipeline-automation.git'
+                sh "ls -lart ./*" 
+                sh "git branch -a"
+                sh "git checkout main"
             }
         }
 
